@@ -1,7 +1,4 @@
-# Try [![Go Report Card](https://goreportcard.com/badge/github.com/lewisay/try)](https://goreportcard.com/report/github.com/lewisay/try) [![GitHub release](https://img.shields.io/github/release/lewisay/try.svg?style=flat-square)](https://github.com/lewisay/try/releases) [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/lewisay/try?tab=doc)
-
-
-
+# Try [![Build Status](https://travis-ci.org/lewisay/try.svg?branch=master)](https://travis-ci.org/lewisay/try)[![Go Report Card](https://goreportcard.com/badge/github.com/lewisay/try)](https://goreportcard.com/report/github.com/lewisay/try) [![GitHub release](https://img.shields.io/github/release/lewisay/try.svg?style=flat-square)](https://github.com/lewisay/try/releases) [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/lewisay/try?tab=doc)
 
 Idiomatic Go retry package.
 

@@ -1,3 +1,13 @@
+// Package try provides retry functionality.
+//     err := try.Do(context.TODO(), func(attempt int) (retry bool, err error) {
+//       retry = attempt < 3 // try 3 times
+//       err = doSomeThing()
+//       return retry, err
+//     })
+//     if err != nil {
+//       log.Fatalln("error:", err)
+//     }
+//
 // Copyright 2020 lewisay. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,7 +50,7 @@ type (
 	// Func function that can be retried.
 	Func func(attempt int) (retry bool, err error)
 
-	// Options for function
+	// Options for retry function
 	Options struct {
 		// MaxRetries retries
 		MaxRetries int
