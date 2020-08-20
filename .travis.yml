@@ -9,6 +9,10 @@ jobs:
       env: GO111MODULE=off
     - go: "1.15.x"
       env: GO111MODULE=off
+
 script:
   - ./.travis.govet.sh
-  - go test -v -race ./...
+  - ./.codecov.sh
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
