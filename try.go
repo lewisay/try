@@ -32,6 +32,13 @@ import (
 )
 
 var (
+	// DefaultMultiplier is the factor with which to multiply backoffs after a
+	// failed retry. Should ideally be greater than 1.
+	DefaultMultiplier = 1.6
+
+	// DefaultJitter is the factor with which backoffs are randomized.
+	DefaultJitter = 0.2
+
 	// DefaultMaxRetries default max retries
 	DefaultMaxRetries = 10
 
@@ -102,19 +109,30 @@ func Do(ctx context.Context, fn Func, opts ...Options) error {
 }
 
 // Backoff backoff with jitter sleep to prevent overloaded conditions during intervals
+// https://github.com/grpc/grpc/blob/master/doc/connection-backoff.md
 func Backoff(retry int, minBackoff, maxBackoff time.Duration) time.Duration {
-	if retry < 0 {
-		retry = 0
-	}
-
-	backoff := minBackoff << uint(retry)
-	if backoff < minBackoff {
-		backoff = minBackoff
-	} else if backoff > maxBackoff {
-		backoff = maxBackoff
-	}
-	if backoff == 0 {
+	if minBackoff == -1 || maxBackoff == -1 {
 		return 0
 	}
-	return time.Duration(rand.Int63n(int64(backoff)))
+
+	if retry == 0 {
+		return minBackoff
+	}
+
+	backoff, max := float64(minBackoff), float64(maxBackoff)
+	for backoff < max && retry > 0 {
+		backoff *= DefaultMultiplier
+		retry--
+	}
+
+	if backoff > max {
+		backoff = max
+	}
+
+	backoff *= 1 + DefaultJitter*(rand.Float64()*2-1)
+	if backoff < 0 {
+		return 0
+	}
+
+	return time.Duration(backoff)
 }

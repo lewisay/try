@@ -25,25 +25,27 @@ import (
 )
 
 func TestBackoff(t *testing.T) {
+	minBackoff := DefaultMinRetryBackoff
+	maxBackOff := DefaultMaxRetryBackoff
 
-	minBackoff := time.Millisecond
-	maxBackOff := 10 * time.Millisecond
-
-	ast := assert.New(t)
-
+	at := assert.New(t)
 	for i := -1; i < 10; i++ {
 		backoff := Backoff(i, minBackoff, maxBackOff)
 		v := int64(backoff)
 
-		ast.GreaterOrEqual(v, int64(0))
-		ast.LessOrEqual(v, int64(maxBackOff))
+		at.GreaterOrEqual(v, int64(minBackoff))
+		at.LessOrEqual(v, int64(maxBackOff))
 	}
 
-	backoff := Backoff(math.MaxInt64, 0, 0)
-	ast.EqualValues(0, backoff)
+	backoff := Backoff(math.MaxInt64, -1, 0)
+	at.EqualValues(0, backoff)
 
+	backoff = Backoff(math.MaxInt64, -1, -0)
+	at.EqualValues(0, backoff)
+
+	DefaultJitter = 10
 	backoff = Backoff(math.MaxInt64, 1, 0)
-	ast.EqualValues(0, backoff)
+	at.EqualValues(0, backoff)
 }
 
 func TestDo1(t *testing.T) {
